@@ -1,0 +1,51 @@
+name: Deploy Chainlit to Cloud Run
+
+on:
+  push:
+    branches:
+      - main  # o la rama que uses para producción
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Authenticate with Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: '${{ secrets.GCP_SA_KEY }}'  # define esto en GitHub Secrets
+
+    - name: Set up gcloud CLI
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: dm-data-aiml-466905
+
+    - name: Configure Docker to use gcloud auth
+      run: gcloud auth configure-docker us-central1-docker.pkg.dev
+
+    - name: Build Docker image
+      run: |
+        docker buildx build --platform linux/amd64 -t chainlit_chat:1.0.0 . --load
+
+    - name: Tag Docker image
+      run: |
+        docker tag chainlit_chat:1.0.0 us-central1-docker.pkg.dev/dm-data-aiml-466905/agents-repo/chainlit_chat:1.0.0
+
+    - name: Push Docker image to Artifact Registry
+      run: |
+        docker push us-central1-docker.pkg.dev/dm-data-aiml-466905/agents-repo/chainlit_chat:1.0.0
+
+    - name: Deploy to Cloud Run
+      run: |
+        gcloud run deploy chainlit-ui \
+          --image=us-central1-docker.pkg.dev/dm-data-aiml-466905/agents-repo/chainlit_chat:1.0.0 \
+          --platform=managed \
+          --region=us-central1 \
+          --allow-unauthenticated \
+          --project=dm-data-aiml-466905
