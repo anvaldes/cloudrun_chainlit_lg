@@ -49,3 +49,4 @@ jobs:
           --region=us-central1 \
           --allow-unauthenticated \
           --project=dm-data-aiml-466905
+          --service-account=dm-data-aiml-sa@dm-data-aiml-466905.iam.gserviceaccount.com
