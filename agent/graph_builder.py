@@ -10,7 +10,7 @@ def route_input(state: AgentState) -> str:
     return "beto_node" if prompt == "BETO" else "gemini_node"
 
 def beto_response(state: AgentState) -> AgentState:
-    state["history"].append("🔥 Grande Beto!")
+    state["history"].append("🔥 Grande Beto!!!")
     return state
 
 def process_input(state: AgentState) -> AgentState:
