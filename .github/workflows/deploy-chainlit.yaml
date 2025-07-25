@@ -49,4 +49,5 @@ jobs:
           --region=us-central1 \
           --allow-unauthenticated \
           --project=dm-data-aiml-466905 \
-          --service-account=dm-data-aiml-sa@dm-data-aiml-466905.iam.gserviceaccount.com
+          --service-account=dm-data-aiml-sa@dm-data-aiml-466905.iam.gserviceaccount.com \
+          --set-env-vars=GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}
