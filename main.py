@@ -11,4 +11,4 @@ async def on_message(message: cl.Message):
     except Exception as e:
         await cl.Message(content=f"⚠️ Error interno: {e}").send()
 
-print("🚀 Chainlit iniciado desde main.py")
+print("🚀 Chainlit iniciado desde main.py!")
